@@ -1,0 +1,13 @@
+############################################################################################
+#                                                                                          # 
+#     Use this config file to set an endpoint to prevent crictl from attempting            #
+#           to connect to a list of known endpoints,                                       #
+#           which might result in an impact to performance                                 #
+#                                                                                          #
+############################################################################################
+
+runtime-endpoint: unix:///run/containerd/containerd.sock
+image-endpoint: unix:///run/containerd/containerd.sock
+timeout: 2
+debug: false
+pull-image-on-create: false
