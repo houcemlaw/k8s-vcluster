@@ -1,6 +1,6 @@
 # k8s-vcluster Vagrant Kubernetes Cluster
 
-Bootstrap a local **2 nodes** Kubernetes cluster using Vagrant.
+Bootstrap a local `Ubunto 22.04` or `Debian 12` **2 nodes** Kubernetes cluster using Vagrant.
 This project aim to help quickly bootstrap a k8s training cluster for testing, devolpment or training purposes.
 
 ## Prerequisites
@@ -19,7 +19,13 @@ vagrant up
 Now Vagrant will start provisioning the cluster starting with the `controlplane` node and the the worker node.
 This setup is available with 2 nodes: a master node (`controlplane`) and a worker node (`node01`).
 
-If you wish to bootstarp additional worker nodes please feel free to update your `VagrantFile` accordingly.
+If you wish to bootstrap additional worker nodes please feel free to update your `VagrantFile` accordingly.
+
+Once the bootstrap process finished go ahead and inspect your cluster using the following command:
+
+```sh
+vagrant global-status
+```
 
 ## Work with the cluster
 
@@ -111,9 +117,21 @@ sudo chown $(id -u):$(id -g) $HOME/.kube/config
 
 ### Deploy `weave` network plugin
 
-A weave eployment file is available under `resources/weave-daemonset-k8s.yaml`.
+A `Weave` deployment file is available under `resources/weave-daemonset-k8s.yaml`.
 
-Go ahead and execute the following command:
+You may want to install `vagrant-scp` on your host in order to be able to transfer files from host to your VMs.
+
+```sh
+vagrant plugin install vagrant-scp
+```
+
+Then use the following command to transfer files:
+
+```sh
+vagrant scp resources/weave-daemonset-k8s.yaml controlplane:.
+```
+
+Go ahead and use that file in your vagrant `controlplane` node to add your network plugin:
 
 ```sh
 kubectl apply -f resources/weave-daemonset-k8s.yaml
@@ -159,3 +177,8 @@ kubectl get nodes -o wide
 kubectl get all --all-namespaces
 ```
 
+### Create a test pod
+
+```sh
+kubectl run test-pod --image=busybox -- sleep 1d
+```

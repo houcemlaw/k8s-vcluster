@@ -66,5 +66,4 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", name: "6-update-kubelet-config", path: "setup-scripts/6-update-kubelet-config.sh", args: [NETWORK_INTERFACE], privileged: false
   config.vm.provision "shell", name: "7-install-etcdctl", path: "setup-scripts/7-install-etcdctl.sh", privileged: false
   config.vm.provision "shell", name: "8-kubectl-config", path: "setup-scripts/8-kubectl-config.sh", privileged: false
-  config.vm.provision "file",  source: "./config/", destination: "."
 end
