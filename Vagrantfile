@@ -6,7 +6,9 @@
 #################################################################
 
 ## define the box to use
-VM_BOX = "ubuntu/jammy64"
+#VM_BOX = "ubuntu/jammy64"
+VM_BOX = "ubuntu/bionic64" 
+VM_BOX_VERSION = "20230607.0.5"
 # VM_BOX = "bento/debian-12"
 
 ## define master node parameters
@@ -43,8 +45,11 @@ vNodes = [
 
 Vagrant.configure("2") do |config|
   config.vm.box = VM_BOX
+  config.vm.box_version = VM_BOX_VERSION
   config.vm.box_check_update = false
+  config.vm.synced_folder "./shared", "/vagrant_shared"
   config.vbguest.auto_update = true if Vagrant.has_plugin?("vagrant-vbguest")
+  
 
   vNodes.each do |node|
     config.vm.define node[:name] do |config|
@@ -66,4 +71,7 @@ Vagrant.configure("2") do |config|
   config.vm.provision "shell", name: "6-update-kubelet-config", path: "setup-scripts/6-update-kubelet-config.sh", args: [NETWORK_INTERFACE], privileged: false
   config.vm.provision "shell", name: "7-install-etcdctl", path: "setup-scripts/7-install-etcdctl.sh", privileged: false
   config.vm.provision "shell", name: "8-kubectl-config", path: "setup-scripts/8-kubectl-config.sh", privileged: false
+  config.vm.provision "shell", name: "9-configure-cluster", path: "setup-scripts/9-configure-cluster.sh", privileged: false
+  config.vm.provision "shell", name: "10-deploy-network-plugin", path: "setup-scripts/10-deploy-network-plugin.sh", privileged: false
+  config.vm.provision "shell", name: "11-configure-node01", path: "setup-scripts/11-configure-node01.sh", privileged: false
 end
